@@ -252,14 +252,16 @@ export function Testimonials() {
           <AnimatePresence mode="wait" custom={dir} initial={false}>
             <motion.div
               key={activeIdx}
-              className="lg:col-span-8 grid grid-cols-1 lg:grid-cols-2 gap-8"
+              className="lg:col-span-8 grid min-w-0 grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 lg:gap-8 items-stretch touch-pan-y"
               initial={reduce ? { opacity: 0 } : { opacity: 0, x: enterX }}
               animate={{ opacity: 1, x: 0 }}
               exit={reduce ? { opacity: 0 } : { opacity: 0, x: -enterX }}
-              transition={{ duration: 0.45, ease: EASE }}
+              transition={{ duration: 0.38, ease: EASE }}
+              style={{ willChange: "transform, opacity" }}
               drag={reduce ? false : "x"}
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.12}
+              dragMomentum={false}
               onDragEnd={(_, info) => {
                 if (info.offset.x < -70) (isRTL ? prev : next)();
                 else if (info.offset.x > 70) (isRTL ? next : prev)();
@@ -279,19 +281,19 @@ export function Testimonials() {
               )}
 
               {/* Side cards */}
-              <div className="flex h-full flex-col gap-5">
+              <div className="grid min-w-0 grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-5 sm:gap-6 auto-rows-fr">
                 {side.map((item, i) => (
-                <SideCard
-                  key={item.id}
-                  item={item}
-                  lang={lang}
-                  reduce={!!reduce}
-                  index={i + 1}
-                />
+                  <SideCard
+                    key={item.id}
+                    item={item}
+                    lang={lang}
+                    reduce={!!reduce}
+                    index={i + 1}
+                  />
                 ))}
               </div>
-
             </motion.div>
+
           </AnimatePresence>
         </div>
       </div>
