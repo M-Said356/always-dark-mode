@@ -77,7 +77,7 @@ export function Testimonials() {
   return (
     <section
       id="awards"
-      className="w-full bg-background py-20 px-4 sm:px-8 md:px-12 text-foreground select-none"
+      className="w-full bg-background py-14 sm:py-20 lg:py-24 px-4 sm:px-8 md:px-12 text-foreground select-none [content-visibility:auto] [contain-intrinsic-size:900px]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -88,9 +88,10 @@ export function Testimonials() {
       }}
     >
       <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 lg:items-stretch">
           {/* Left Column: Title & Controls */}
-          <div className="lg:col-span-4 flex flex-col justify-between h-full">
+          <div className="lg:col-span-4 flex min-w-0 flex-col justify-between gap-8 h-full">
+
             <motion.div
               initial={reduce ? {} : { opacity: 0, y: 24 }}
               whileInView={reduce ? {} : { opacity: 1, y: 0 }}
