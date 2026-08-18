@@ -124,7 +124,7 @@ export function Testimonials() {
                   /{String(total).padStart(2, "0")}
                 </span>
               </div>
-              <h2 className="font-['Oswald',sans-serif] text-4xl sm:text-5xl font-bold text-foreground leading-tight mb-6">
+              <h2 className="font-['Oswald',sans-serif] text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-[1.05] text-balance mb-6">
                 {tr("awards.title1")}
                 <br />
                 {tr("awards.title2")}
@@ -348,7 +348,7 @@ function FeaturedCard({
         {item.title[lang]}
       </h3>
 
-      <p className="font-sans text-xs text-card-foreground/85 leading-relaxed mb-6 max-w-xs">
+      <p className="font-sans text-xs text-card-foreground/85 leading-relaxed mb-6 max-w-[34ch] text-balance">
         {item.summary[lang]}
       </p>
 
@@ -450,10 +450,10 @@ function SideCard({
       <div className="grid size-12 place-items-center rounded-xl bg-foreground/10 text-foreground mb-3">
         <Icon className="size-6 text-primary" />
       </div>
-      <h4 className="font-['Oswald',sans-serif] text-lg font-bold text-card-foreground mb-2 leading-tight max-w-[220px]">
+      <h4 className="font-['Oswald',sans-serif] text-lg font-bold text-card-foreground mb-2 leading-tight text-balance">
         {item.title[lang]}
       </h4>
-      <p className="font-sans text-[11px] text-card-foreground/70 mb-3 max-w-[240px] leading-relaxed">
+      <p className="font-sans text-[11px] text-card-foreground/70 mb-3 leading-relaxed break-words">
         {item.org[lang]}
       </p>
       <span className="rounded-xl bg-foreground/10 px-3 py-0.5 font-sans text-[9px] font-black tracking-widest text-primary uppercase border border-border">
