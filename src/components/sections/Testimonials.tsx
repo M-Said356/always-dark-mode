@@ -330,7 +330,7 @@ function FeaturedCard({
       initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: EASE, delay: reduce ? 0 : 0.08 * index }}
-      className="relative h-full rounded-2xl bg-card p-8 border border-border shadow-[var(--shadow-glow)] flex flex-col items-center text-center"
+      className="relative h-full min-w-0 rounded-2xl bg-card p-6 sm:p-7 lg:p-8 border border-border shadow-[var(--shadow-glow)] flex flex-col items-center text-center"
     >
       <span className="rounded-xl bg-foreground/10 px-4 py-1 font-sans text-[10px] font-black tracking-widest text-primary uppercase mb-6 border border-border">
         {item.year}
