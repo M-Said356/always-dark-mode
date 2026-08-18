@@ -158,40 +158,48 @@ export function Testimonials() {
                 </motion.div>
               </AnimatePresence>
 
-              {/* Slide visual: one image, tied to the active slide */}
-              <div className="mb-8 relative w-full max-w-[15rem] overflow-hidden rounded-2xl border border-border bg-foreground/5">
-                <div className="aspect-[4/5] w-full">
-                  <AnimatePresence mode="popLayout" custom={dir} initial={false}>
-                    <motion.img
-                      key={activeIdx}
-                      custom={dir}
-                      src={SLIDE_IMAGES[activeIdx % SLIDE_IMAGES.length]!}
-                      alt={slide[0]?.title[lang] ?? ""}
-                      width={640}
-                      height={800}
-                      draggable={false}
-                      initial={
-                        reduce
-                          ? { opacity: 0 }
-                          : { opacity: 0, x: dir * 60, scale: 1.04, filter: "blur(6px)" }
-                      }
-                      animate={{ opacity: 1, x: 0, scale: 1, filter: "blur(0px)" }}
-                      exit={
-                        reduce
-                          ? { opacity: 0 }
-                          : { opacity: 0, x: -dir * 60, scale: 0.98, filter: "blur(6px)" }
-                      }
-                      transition={{
-                        x: { type: "spring", stiffness: 520, damping: 42, mass: 0.6 },
-                        opacity: { duration: 0.22, ease: EASE },
-                        scale: { duration: 0.28, ease: EASE },
-                        filter: { duration: 0.22, ease: EASE },
-                      }}
-                      className="absolute inset-0 size-full object-cover will-change-transform"
-                    />
-                  </AnimatePresence>
+              {/* Slide visual: all frames stay mounted (decoded once) and cross-fade
+                  with transform+opacity only — no unmount, no blur filter, no jank. */}
+              <div className="mb-8 relative w-full max-w-[11rem] sm:max-w-[13rem] lg:max-w-[15rem] overflow-hidden rounded-2xl border border-border bg-foreground/5 [contain:paint]">
+                <div className="relative aspect-[4/5] w-full">
+                  {SLIDE_IMAGES.map((src, i) => {
+                    const isActive = i === activeIdx % SLIDE_IMAGES.length;
+                    const offset = reduce ? 0 : dir * 56;
+                    return (
+                      <motion.img
+                        key={src}
+                        src={src}
+                        alt={isActive ? (slide[0]?.title[lang] ?? "") : ""}
+                        aria-hidden={!isActive}
+                        width={640}
+                        height={800}
+                        draggable={false}
+                        loading={i === 0 ? "eager" : "lazy"}
+                        decoding="async"
+                        fetchPriority={i === 0 ? "high" : "low"}
+                        initial={false}
+                        animate={
+                          isActive
+                            ? { opacity: 1, x: 0, scale: 1 }
+                            : { opacity: 0, x: -offset, scale: 0.985 }
+                        }
+                        transition={
+                          reduce
+                            ? { duration: 0.2 }
+                            : {
+                                x: { type: "spring", stiffness: 480, damping: 44, mass: 0.55 },
+                                opacity: { duration: 0.28, ease: EASE },
+                                scale: { duration: 0.32, ease: EASE },
+                              }
+                        }
+                        style={{ zIndex: isActive ? 1 : 0, willChange: "transform, opacity" }}
+                        className="absolute inset-0 size-full object-cover [backface-visibility:hidden] [transform:translateZ(0)]"
+                      />
+                    );
+                  })}
                 </div>
               </div>
+
 
             </motion.div>
 
