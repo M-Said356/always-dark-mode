@@ -77,7 +77,7 @@ export function Testimonials() {
   return (
     <section
       id="awards"
-      className="w-full bg-background py-20 px-4 sm:px-8 md:px-12 text-foreground select-none"
+      className="w-full bg-background py-14 sm:py-20 lg:py-24 px-4 sm:px-8 md:px-12 text-foreground select-none [content-visibility:auto] [contain-intrinsic-size:900px]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -88,9 +88,10 @@ export function Testimonials() {
       }}
     >
       <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 lg:items-center">
           {/* Left Column: Title & Controls */}
-          <div className="lg:col-span-4 flex flex-col justify-between h-full">
+          <div className="lg:col-span-4 flex min-w-0 flex-col justify-between gap-8 h-full">
+
             <motion.div
               initial={reduce ? {} : { opacity: 0, y: 24 }}
               whileInView={reduce ? {} : { opacity: 1, y: 0 }}
@@ -123,7 +124,7 @@ export function Testimonials() {
                   /{String(total).padStart(2, "0")}
                 </span>
               </div>
-              <h2 className="font-['Oswald',sans-serif] text-4xl sm:text-5xl font-bold text-foreground leading-tight mb-6">
+              <h2 className="font-['Oswald',sans-serif] text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-[1.05] text-balance mb-6">
                 {tr("awards.title1")}
                 <br />
                 {tr("awards.title2")}
@@ -158,40 +159,48 @@ export function Testimonials() {
                 </motion.div>
               </AnimatePresence>
 
-              {/* Slide visual: one image, tied to the active slide */}
-              <div className="mb-8 relative w-full max-w-[15rem] overflow-hidden rounded-2xl border border-border bg-foreground/5">
-                <div className="aspect-[4/5] w-full">
-                  <AnimatePresence mode="popLayout" custom={dir} initial={false}>
-                    <motion.img
-                      key={activeIdx}
-                      custom={dir}
-                      src={SLIDE_IMAGES[activeIdx % SLIDE_IMAGES.length]!}
-                      alt={slide[0]?.title[lang] ?? ""}
-                      width={640}
-                      height={800}
-                      draggable={false}
-                      initial={
-                        reduce
-                          ? { opacity: 0 }
-                          : { opacity: 0, x: dir * 60, scale: 1.04, filter: "blur(6px)" }
-                      }
-                      animate={{ opacity: 1, x: 0, scale: 1, filter: "blur(0px)" }}
-                      exit={
-                        reduce
-                          ? { opacity: 0 }
-                          : { opacity: 0, x: -dir * 60, scale: 0.98, filter: "blur(6px)" }
-                      }
-                      transition={{
-                        x: { type: "spring", stiffness: 520, damping: 42, mass: 0.6 },
-                        opacity: { duration: 0.22, ease: EASE },
-                        scale: { duration: 0.28, ease: EASE },
-                        filter: { duration: 0.22, ease: EASE },
-                      }}
-                      className="absolute inset-0 size-full object-cover will-change-transform"
-                    />
-                  </AnimatePresence>
+              {/* Slide visual: all frames stay mounted (decoded once) and cross-fade
+                  with transform+opacity only — no unmount, no blur filter, no jank. */}
+              <div className="mb-8 relative w-full max-w-[11rem] sm:max-w-[13rem] lg:max-w-[15rem] overflow-hidden rounded-2xl border border-border bg-foreground/5 [contain:paint]">
+                <div className="relative aspect-[4/5] w-full">
+                  {SLIDE_IMAGES.map((src, i) => {
+                    const isActive = i === activeIdx % SLIDE_IMAGES.length;
+                    const offset = reduce ? 0 : dir * 56;
+                    return (
+                      <motion.img
+                        key={src}
+                        src={src}
+                        alt={isActive ? (slide[0]?.title[lang] ?? "") : ""}
+                        aria-hidden={!isActive}
+                        width={640}
+                        height={800}
+                        draggable={false}
+                        loading={i === 0 ? "eager" : "lazy"}
+                        decoding="async"
+                        fetchPriority={i === 0 ? "high" : "low"}
+                        initial={false}
+                        animate={
+                          isActive
+                            ? { opacity: 1, x: 0, scale: 1 }
+                            : { opacity: 0, x: -offset, scale: 0.985 }
+                        }
+                        transition={
+                          reduce
+                            ? { duration: 0.2 }
+                            : {
+                                x: { type: "spring", stiffness: 480, damping: 44, mass: 0.55 },
+                                opacity: { duration: 0.28, ease: EASE },
+                                scale: { duration: 0.32, ease: EASE },
+                              }
+                        }
+                        style={{ zIndex: isActive ? 1 : 0, willChange: "transform, opacity" }}
+                        className="absolute inset-0 size-full object-cover [backface-visibility:hidden] [transform:translateZ(0)]"
+                      />
+                    );
+                  })}
                 </div>
               </div>
+
 
             </motion.div>
 
@@ -243,14 +252,16 @@ export function Testimonials() {
           <AnimatePresence mode="wait" custom={dir} initial={false}>
             <motion.div
               key={activeIdx}
-              className="lg:col-span-8 grid grid-cols-1 lg:grid-cols-2 gap-8"
+              className="lg:col-span-8 grid min-w-0 grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 lg:gap-8 items-stretch touch-pan-y"
               initial={reduce ? { opacity: 0 } : { opacity: 0, x: enterX }}
               animate={{ opacity: 1, x: 0 }}
               exit={reduce ? { opacity: 0 } : { opacity: 0, x: -enterX }}
-              transition={{ duration: 0.45, ease: EASE }}
+              transition={{ duration: 0.38, ease: EASE }}
+              style={{ willChange: "transform, opacity" }}
               drag={reduce ? false : "x"}
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.12}
+              dragMomentum={false}
               onDragEnd={(_, info) => {
                 if (info.offset.x < -70) (isRTL ? prev : next)();
                 else if (info.offset.x > 70) (isRTL ? next : prev)();
@@ -270,19 +281,19 @@ export function Testimonials() {
               )}
 
               {/* Side cards */}
-              <div className="flex h-full flex-col gap-5">
+              <div className="grid min-w-0 grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-5 sm:gap-6 auto-rows-fr">
                 {side.map((item, i) => (
-                <SideCard
-                  key={item.id}
-                  item={item}
-                  lang={lang}
-                  reduce={!!reduce}
-                  index={i + 1}
-                />
+                  <SideCard
+                    key={item.id}
+                    item={item}
+                    lang={lang}
+                    reduce={!!reduce}
+                    index={i + 1}
+                  />
                 ))}
               </div>
-
             </motion.div>
+
           </AnimatePresence>
         </div>
       </div>
@@ -319,7 +330,7 @@ function FeaturedCard({
       initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: EASE, delay: reduce ? 0 : 0.08 * index }}
-      className="relative h-full rounded-2xl bg-card p-8 border border-border shadow-[var(--shadow-glow)] flex flex-col items-center text-center"
+      className="relative h-full min-w-0 rounded-2xl bg-card p-6 sm:p-7 lg:p-8 border border-border shadow-[var(--shadow-glow)] flex flex-col items-center text-center"
     >
       <span className="rounded-xl bg-foreground/10 px-4 py-1 font-sans text-[10px] font-black tracking-widest text-primary uppercase mb-6 border border-border">
         {item.year}
@@ -337,7 +348,7 @@ function FeaturedCard({
         {item.title[lang]}
       </h3>
 
-      <p className="font-sans text-xs text-card-foreground/85 leading-relaxed mb-6 max-w-xs">
+      <p className="font-sans text-xs text-card-foreground/85 leading-relaxed mb-6 max-w-[34ch] text-balance">
         {item.summary[lang]}
       </p>
 
@@ -434,15 +445,15 @@ function SideCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: EASE, delay: reduce ? 0 : 0.08 * index }}
       whileHover={reduce ? {} : { y: -6 }}
-      className="flex-1 rounded-2xl bg-card p-6 border border-border shadow-md flex flex-col items-center text-center hover:bg-card/90 transition-colors"
+      className="h-full min-w-0 rounded-2xl bg-card p-5 sm:p-6 border border-border shadow-md flex flex-col items-center justify-center text-center transition-colors hover:bg-card/90"
     >
       <div className="grid size-12 place-items-center rounded-xl bg-foreground/10 text-foreground mb-3">
         <Icon className="size-6 text-primary" />
       </div>
-      <h4 className="font-['Oswald',sans-serif] text-lg font-bold text-card-foreground mb-2 leading-tight max-w-[220px]">
+      <h4 className="font-['Oswald',sans-serif] text-lg font-bold text-card-foreground mb-2 leading-tight text-balance">
         {item.title[lang]}
       </h4>
-      <p className="font-sans text-[11px] text-card-foreground/70 mb-3 max-w-[240px] leading-relaxed">
+      <p className="font-sans text-[11px] text-card-foreground/70 mb-3 leading-relaxed break-words">
         {item.org[lang]}
       </p>
       <span className="rounded-xl bg-foreground/10 px-3 py-0.5 font-sans text-[9px] font-black tracking-widest text-primary uppercase border border-border">
