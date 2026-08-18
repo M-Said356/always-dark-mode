@@ -88,7 +88,7 @@ export function Testimonials() {
       }}
     >
       <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 lg:items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 lg:items-center">
           {/* Left Column: Title & Controls */}
           <div className="lg:col-span-4 flex min-w-0 flex-col justify-between gap-8 h-full">
 
@@ -252,7 +252,7 @@ export function Testimonials() {
           <AnimatePresence mode="wait" custom={dir} initial={false}>
             <motion.div
               key={activeIdx}
-              className="lg:col-span-8 grid min-w-0 grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 lg:gap-8 items-start touch-pan-y"
+              className="lg:col-span-8 grid min-w-0 grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 lg:gap-8 items-stretch touch-pan-y"
               initial={reduce ? { opacity: 0 } : { opacity: 0, x: enterX }}
               animate={{ opacity: 1, x: 0 }}
               exit={reduce ? { opacity: 0 } : { opacity: 0, x: -enterX }}
@@ -281,7 +281,7 @@ export function Testimonials() {
               )}
 
               {/* Side cards */}
-              <div className="grid min-w-0 grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-5 sm:gap-6 auto-rows-min">
+              <div className="grid min-w-0 grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-5 sm:gap-6 auto-rows-fr">
                 {side.map((item, i) => (
                   <SideCard
                     key={item.id}
