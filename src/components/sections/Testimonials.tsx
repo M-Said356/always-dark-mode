@@ -445,7 +445,7 @@ function SideCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: EASE, delay: reduce ? 0 : 0.08 * index }}
       whileHover={reduce ? {} : { y: -6 }}
-      className="flex-1 rounded-2xl bg-card p-6 border border-border shadow-md flex flex-col items-center text-center hover:bg-card/90 transition-colors"
+      className="h-full min-w-0 rounded-2xl bg-card p-5 sm:p-6 border border-border shadow-md flex flex-col items-center justify-center text-center transition-colors hover:bg-card/90"
     >
       <div className="grid size-12 place-items-center rounded-xl bg-foreground/10 text-foreground mb-3">
         <Icon className="size-6 text-primary" />
