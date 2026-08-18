@@ -1,22 +1,9 @@
-@import "tailwindcss" source(none);
+@import "tailwindcss";
 @source "../src";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
-/*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
- */
+/* Theme variant: .light class is added to <html> when user picks light mode.
+   Default (:root) = coral/dark editorial theme. */
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -25,7 +12,7 @@
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -45,91 +32,364 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-ring-offset-background: var(--background);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-social-dribbble: var(--social-dribbble);
+  --color-social-twitter: var(--social-twitter);
+  --color-social-twitch: var(--social-twitch);
+  --color-social-facebook: var(--social-facebook);
+  --color-social-instagram: var(--social-instagram);
+  --color-social-github: var(--social-github);
+  --color-social-linkedin: var(--social-linkedin);
+  --color-social-foreground: var(--social-foreground);
+
+  --color-accent-muted: var(--accent-muted);
+  --color-success: var(--success);
+  --color-overlay: var(--overlay);
+  --color-overlay-foreground: var(--overlay-foreground);
+
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-display: "Archivo", system-ui, sans-serif;
+  --font-arabic: "Cairo", "Tajawal", "Noto Sans Arabic", system-ui, sans-serif;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-marquee: marquee 28s linear infinite;
+  --animate-blob: blob 14s ease-in-out infinite;
 }
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(-1.2deg);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes blob {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(4%, -6%) scale(1.08);
+  }
+  66% {
+    transform: translate(-5%, 4%) scale(0.94);
+  }
+}
+
+@keyframes skeleton-sweep {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Scroll reveal (see components/ui/Reveal.tsx) — CSS only, no JS per frame. */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.6s cubic-bezier(0.21, 0.5, 0.3, 1),
+    transform 0.6s cubic-bezier(0.21, 0.5, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Above-the-fold entrance animation used by the hero. */
+.enter-up {
+  animation: enter-up 0.7s cubic-bezier(0.21, 0.5, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .enter-up {
+    animation: none;
+  }
+}
+
+
+/* ---------------------------------------------------------------------------
+ * Utility layer — the single source of truth for every repeated surface,
+ * button, chip and label in the app. Components compose these utilities and
+ * must never re-declare their colors, borders or paddings inline.
+ * ------------------------------------------------------------------------ */
+
+/* Shimmering placeholder used by SmartImage and the skeleton components. */
+@utility skeleton-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    color-mix(in oklab, var(--muted) 70%, transparent) 20%,
+    color-mix(in oklab, var(--foreground) 8%, transparent) 40%,
+    color-mix(in oklab, var(--muted) 70%, transparent) 60%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 1.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer {
+    animation: none;
+  }
+}
+
+/* Defer offscreen section rendering without affecting scroll height. */
+@utility defer-paint {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 640px;
+}
+
+/* Solid card surface. Uses CSS variable tokens so it adapts to both themes. */
+@utility glass {
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Small status/meta label. Single source of truth for every chip. */
+@utility chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--accent) 20%, transparent);
+  background: color-mix(in oklab, var(--accent) 10%, transparent);
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* --- Buttons -------------------------------------------------------------
+ * Three variants, used everywhere. Layout-only helpers (w-full, mt-*) may be
+ * added by the caller; colors, radius and padding may not. */
+@utility btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-xl);
+  padding: 0.875rem 1.75rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 0.3s ease;
+  &:disabled {
+    opacity: 0.6;
+    transform: none;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
+  }
+}
+
+/* Solid accent call to action. */
+@utility btn-accent {
+  @apply btn-base;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  box-shadow: var(--shadow-glow);
+  &:hover:not(:disabled) {
+    transform: scale(1.03);
+  }
+}
+
+/* Accent outline, used by every "see more" secondary action. */
+@utility btn-accent-outline {
+  @apply btn-base;
+  border-color: color-mix(in oklab, var(--accent) 50%, transparent);
+  color: var(--accent);
+  &:hover {
+    background: color-mix(in oklab, var(--accent) 10%, transparent);
+    transform: scale(1.03);
+  }
+}
+
+/* Neutral outline pill used by filters and tertiary links. */
+@utility pill-outline {
+  @apply btn-base;
+  border-color: var(--border);
+  &:hover {
+    border-color: color-mix(in oklab, var(--accent) 50%, transparent);
+    color: var(--accent);
+  }
+}
+
+/* Accent CTA that leads with a circular icon badge. */
+@utility btn-accent-icon {
+  @apply btn-accent;
+  padding-block: 0.5rem;
+  padding-inline: 0.5rem 1.5rem;
+}
+
+/* Persistent nav / footer link label. */
+@utility nav-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+
+/* --- Typography ----------------------------------------------------------
+ * Uppercase micro-label above headings. Color stays with the caller
+ * (text-accent / text-muted-foreground) so there is one shape, many tones. */
+@utility eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+}
+
+@utility eyebrow-wide {
+  @apply eyebrow;
+  letter-spacing: 0.35em;
+}
+
+@utility glow-accent {
+  box-shadow: var(--shadow-glow);
+}
+
+@utility grid-bg {
+  background-image: radial-gradient(
+    color-mix(in oklab, var(--foreground) 12%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 26px 26px;
+}
+
+@utility card-lift {
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 0.35s ease;
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --radius: 1.25rem;
+
+  /* Coral / Dark editorial theme (default) */
+  --background: #FF4B35;
+  --foreground: #ffffff;
+  --card: #D93623;
+  --card-foreground: #ffffff;
+  --popover: #D93623;
+  --popover-foreground: #ffffff;
+  --primary: #FFD000;
+  --primary-foreground: #FF4B35;
+  --secondary: #C82D1B;
+  --secondary-foreground: #ffffff;
+  --muted: rgba(255, 255, 255, 0.15);
+  --muted-foreground: rgba(255, 255, 255, 0.85);
+  --accent: #FFD000;
+  --accent-foreground: #FF4B35;
+  --destructive: #b91c1c;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255, 255, 255, 0.18);
+  --input: rgba(255, 255, 255, 0.2);
+  --ring: #FFD000;
+
+  --accent-muted: rgba(255, 208, 0, 0.2);
+  --success: #22c55e;
+  --overlay: rgba(0, 0, 0, 0.5);
+  --overlay-foreground: #ffffff;
+
+  --shadow-glow: 0 20px 45px rgba(160, 20, 0, 0.35);
+  --shadow-lift: 0 24px 50px rgba(160, 20, 0, 0.4);
+  --gradient-media: linear-gradient(135deg, #D93623, #B82816);
+
+  /* Social brand tiles (footer) */
+  --social-dribbble: #EA4C89;
+  --social-twitter: #00A2FF;
+  --social-twitch: #8A2BE2;
+  --social-facebook: #0084FF;
+  --social-instagram: #E4405F;
+  --social-github: #24292e;
+  --social-linkedin: #0A66C2;
+  --social-foreground: #ffffff;
+
+  /* Scrollbar (coral mode) */
+  --scrollbar-size: 10px;
+  --scrollbar-track: rgba(217, 54, 35, 0.5);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.4);
+  --scrollbar-thumb-hover: #FFD000;
 }
 
-.dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+.light {
+  /* Studio Light Theme */
+  --background: #F8F6F0;
+  --foreground: #1A1A1A;
+  --card: #FFFFFF;
+  --card-foreground: #1A1A1A;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1A1A;
+  --primary: #FF4B35;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F0EDE4;
+  --secondary-foreground: #1A1A1A;
+  --muted: rgba(0, 0, 0, 0.06);
+  --muted-foreground: #555555;
+  --accent: #FF4B35;
+  --accent-foreground: #FFFFFF;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --input: rgba(0, 0, 0, 0.12);
+  --ring: #FF4B35;
+
+  --accent-muted: rgba(255, 75, 53, 0.12);
+  --success: #16a34a;
+
+  --shadow-glow: 0 16px 36px rgba(0, 0, 0, 0.08);
+  --shadow-lift: 0 20px 40px rgba(0, 0, 0, 0.12);
+
+  /* Scrollbar (light mode) */
+  --scrollbar-track: rgba(0, 0, 0, 0.05);
+  --scrollbar-thumb: rgba(0, 0, 0, 0.2);
+  --scrollbar-thumb-hover: #FF4B35;
 }
 
 @layer base {
@@ -137,8 +397,185 @@
     border-color: var(--color-border);
   }
 
+  /* Single source of truth for scrollbars (both modes) */
+  html {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
+  *::-webkit-scrollbar {
+    width: var(--scrollbar-size);
+    height: var(--scrollbar-size);
+  }
+
+  *::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: 999px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 999px;
+    transition: background-color 0.2s ease;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+    background-clip: padding-box;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.35s ease, color 0.35s ease;
+    /* Safety net: decorative blurs/marquees must never create a horizontal scrollbar */
+    overflow-x: hidden;
+  }
+
+  /* Long unbroken words (URLs, emails, tech names) must not blow out narrow screens */
+  h1,
+  h2,
+  h3,
+  p,
+  li,
+  a {
+    overflow-wrap: break-word;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  /* ---------------------------------------------------------------
+     Arabic / RTL typography
+     - Arabic script is cursive: letter-spacing breaks word shaping,
+       and the Latin display faces have no Arabic glyphs.
+     - So in Arabic we swap every family to the Arabic stack and
+       neutralise tracking / uppercase transforms.
+  ----------------------------------------------------------------- */
+  :root[lang="ar"],
+  [dir="rtl"] body {
+    font-family: var(--font-arabic);
+  }
+
+  [dir="rtl"] body,
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3,
+  [dir="rtl"] h4,
+  [dir="rtl"] h5,
+  [dir="rtl"] h6,
+  [dir="rtl"] button,
+  [dir="rtl"] input,
+  [dir="rtl"] textarea,
+  [dir="rtl"] select {
+    font-family: var(--font-arabic);
+  }
+
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3 {
+    letter-spacing: 0;
+    line-height: 1.25;
+  }
+
+  /* Kill Tailwind tracking/uppercase utilities for Arabic text nodes */
+  :root[lang="ar"] *:not(.keep-latin):not(.keep-latin *) {
+    letter-spacing: normal !important;
+    text-transform: none !important;
+  }
+
+  /* Latin-only bits (logo, tech names, code) keep their original face */
+  .keep-latin {
+    font-family: var(--font-display);
+  }
+
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+}
+
+/* Outside @layer base so it beats Tailwind font-family utilities
+   (font-sans / font-display / arbitrary font-['Oswald'] classes)
+   when the page is in Arabic. */
+:root[lang="ar"] *:not(.keep-latin):not(.keep-latin *) {
+  font-family: var(--font-arabic);
+}
+
+:root[lang="ar"] body:not(.keep-latin) {
+  font-family: var(--font-arabic);
+  /* Cairo reads better with a touch more leading and no synthetic weight jumps */
+  line-height: 1.75;
+  font-optical-sizing: auto;
+}
+
+:root[lang="ar"] :where(h1, h2, h3, h4, h5, h6):not(.keep-latin):not(.keep-latin *) {
+  line-height: 1.35;
+  letter-spacing: 0;
+  word-spacing: 0.02em;
+}
+
+/* Latin fragments (brand, tech names, URLs, numbers) keep their Latin face
+   and their own LTR flow so punctuation doesn't jump sides. */
+:root[lang="ar"] .keep-latin,
+:root[lang="ar"] .keep-latin * {
+  font-family: var(--font-display);
+}
+
+:root[lang="ar"] .keep-latin {
+  unicode-bidi: isolate;
+}
+
+/* Mixed Arabic/Latin paragraphs: isolate runs so trailing dots stay put */
+:root[lang="ar"] :where(p, li, span, h1, h2, h3, h4, blockquote) {
+  unicode-bidi: isolate;
+}
+
+/* Icons/arrows authored for LTR flip with the document direction */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+
+/* ── Theme toggle: circular View Transition reveal ───────────────────────── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Outgoing theme stays put; incoming theme is clipped open from the toggle */
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+html.theme-transition-reverse::view-transition-old(root) {
+  z-index: 2;
+}
+html.theme-transition-reverse::view-transition-new(root) {
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
   }
 }
