@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { useTheme } from "@/lib/theme";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { prefetchRouteLottie } from "@/lib/lottie-routes";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -78,22 +79,22 @@ export function Navbar() {
         >
           {/* Prefix dots */}
           <div className="flex items-end gap-[2px] opacity-90">
-            <span className="size-1 rounded-full bg-[#FF4B35] mb-[1px]" />
+            <span className="size-1 rounded-full bg-brand mb-[1px]" />
             <div className="flex flex-col gap-[2px]">
-              <span className="size-1 rounded-full bg-[#FF4B35]" />
-              <span className="size-1 rounded-full bg-[#FF4B35]" />
+              <span className="size-1 rounded-full bg-brand" />
+              <span className="size-1 rounded-full bg-brand" />
             </div>
           </div>
 
           {/* MS Red Square */}
-          <div className="grid place-items-center rounded-[4px] bg-[#FF4B35] px-1.5 py-0.5 shadow-sm">
-            <span className="keep-latin font-['Oswald',sans-serif] text-xs font-bold leading-none text-white tracking-tighter">
+          <div className="grid place-items-center rounded-[4px] bg-brand px-1.5 py-0.5 shadow-sm">
+            <span className="keep-latin type-wordmark [--wordmark-size:0.75rem] text-white">
               MS
             </span>
           </div>
 
           {/* MOSTAFA SAMIR Text */}
-          <div className="keep-latin flex flex-col text-start font-sans text-[8px] font-black tracking-[0.2em] text-foreground leading-tight uppercase">
+          <div className="keep-latin flex flex-col text-start type-micro text-foreground">
             <span>MOSTAFA</span>
             <span>SAMIR</span>
           </div>
@@ -105,7 +106,10 @@ export function Navbar() {
             <Link
               key={l.key}
               to={l.to}
-              className="font-sans text-[11px] font-extrabold tracking-[0.25em] text-foreground transition-opacity hover:opacity-75 uppercase"
+              onMouseEnter={() => prefetchRouteLottie(l.to)}
+              onFocus={() => prefetchRouteLottie(l.to)}
+              onTouchStart={() => prefetchRouteLottie(l.to)}
+              className="nav-label text-foreground transition-opacity hover:opacity-75"
             >
               {tr(l.key)}
             </Link>
@@ -125,30 +129,25 @@ export function Navbar() {
             title={tr("common.theme")}
           >
             <Sun
-              className={`absolute size-3.5 text-[#FFD000] transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
-                theme === "dark"
-                  ? "rotate-0 scale-100 opacity-100"
-                  : "-rotate-90 scale-0 opacity-0"
+              className={`absolute size-3.5 text-accent transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
+                theme === "dark" ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-0 opacity-0"
               }`}
             />
             <Moon
-              className={`absolute size-3.5 text-[#FF4B35] transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
-                theme === "dark"
-                  ? "rotate-90 scale-0 opacity-0"
-                  : "rotate-0 scale-100 opacity-100"
+              className={`absolute size-3.5 text-accent transition-all duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
+                theme === "dark" ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"
               }`}
             />
           </button>
-
 
           {/* Language Switcher */}
           <button
             onClick={toggleLang}
             aria-label={tr("common.language")}
-            className="flex h-8 items-center gap-1.5 rounded-2xl bg-foreground/10 border border-border px-2.5 text-[11px] font-extrabold text-foreground transition-all hover:bg-foreground/20 hover:scale-105"
+            className="flex h-8 items-center gap-1.5 rounded-2xl bg-foreground/10 border border-border px-2.5 type-micro text-foreground transition-all hover:bg-foreground/20 hover:scale-105"
             title={tr("common.language")}
           >
-            <Globe className="size-3.5 text-[#FF4B35]" />
+            <Globe className="size-3.5 text-accent" />
             <span className="keep-latin uppercase">{lang === "en" ? "AR" : "EN"}</span>
           </button>
 
@@ -193,7 +192,9 @@ export function Navbar() {
               key={l.key}
               to={l.to}
               onClick={() => setOpen(false)}
-              className="rounded-2xl px-4 py-2.5 text-start font-sans text-xs font-black tracking-[0.2em] uppercase text-foreground hover:bg-foreground/10"
+              onTouchStart={() => prefetchRouteLottie(l.to)}
+              onFocus={() => prefetchRouteLottie(l.to)}
+              className="rounded-2xl px-4 py-2.5 text-start type-label text-foreground hover:bg-foreground/10"
             >
               {tr(l.key)}
             </Link>
@@ -203,7 +204,7 @@ export function Navbar() {
               href="https://github.com/Mostafa-SAID7"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 font-sans text-xs font-bold text-foreground hover:opacity-75"
+              className="inline-flex items-center gap-2 type-body-strong text-foreground hover:opacity-75"
             >
               <Github className="size-4" /> GitHub
             </a>
@@ -212,7 +213,7 @@ export function Navbar() {
               href="https://linkedin.com/in/mostafasamirsaid"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 font-sans text-xs font-bold text-foreground hover:opacity-75"
+              className="inline-flex items-center gap-2 type-body-strong text-foreground hover:opacity-75"
             >
               <Linkedin className="size-4" /> LinkedIn
             </a>

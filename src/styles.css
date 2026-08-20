@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@source "../src";
 @import "tw-animate-css";
+@source "../src";
 
 /* Theme variant: .light class is added to <html> when user picks light mode.
    Default (:root) = coral/dark editorial theme. */
@@ -42,14 +42,34 @@
   --color-social-linkedin: var(--social-linkedin);
   --color-social-foreground: var(--social-foreground);
 
+  --color-brand: var(--brand);
   --color-accent-muted: var(--accent-muted);
   --color-success: var(--success);
   --color-overlay: var(--overlay);
   --color-overlay-foreground: var(--overlay-foreground);
 
+  /* Elevation tokens -> `shadow-glow` / `shadow-lift` utilities. */
+  --shadow-glow: var(--glow);
+  --shadow-lift: var(--lift);
+
   --font-sans: "DM Sans", system-ui, sans-serif;
-  --font-display: "Archivo", system-ui, sans-serif;
+  --font-display: "Oswald", "Archivo", system-ui, sans-serif;
+  --font-script: "Caveat", "Segoe Script", cursive;
   --font-arabic: "Cairo", "Tajawal", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* --- Type scale ---------------------------------------------------------
+   * Two extra micro steps below `text-xs`, so no component has to reach for
+   * an arbitrary `text-[9px]` value again. */
+  --text-3xs: 0.625rem;
+  --text-3xs--line-height: 1.4;
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1.45;
+
+  /* Letter-spacing steps used by labels, eyebrows and hero type. */
+  --tracking-label: 0.18em;
+  --tracking-eyebrow: 0.25em;
+  --tracking-hero: 0.35em;
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-marquee: marquee 28s linear infinite;
@@ -109,6 +129,33 @@
   }
 }
 
+/* Heading entrance used by `type-in`: rise + tracking settle. */
+@keyframes type-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+    letter-spacing: 0.06em;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Ink-swipe underline drawn under an accented heading word (`type-mark`). */
+@keyframes mark-swipe {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+
+
 /* Scroll reveal (see components/ui/Reveal.tsx) — CSS only, no JS per frame. */
 .reveal {
   opacity: 0;
@@ -128,18 +175,8 @@
   animation: enter-up 0.7s cubic-bezier(0.21, 0.5, 0.3, 1) both;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .reveal,
-  .reveal.is-visible {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
 
-  .enter-up {
-    animation: none;
-  }
-}
+
 
 
 /* ---------------------------------------------------------------------------
@@ -160,11 +197,6 @@
   animation: skeleton-sweep 1.4s linear infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .skeleton-shimmer {
-    animation: none;
-  }
-}
 
 /* Defer offscreen section rendering without affecting scroll height. */
 @utility defer-paint {
@@ -176,7 +208,7 @@
 @utility glass {
   background: var(--card);
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--glow);
 }
 
 /* Small status/meta label. Single source of truth for every chip. */
@@ -203,7 +235,11 @@
   gap: 0.5rem;
   border-radius: var(--radius-xl);
   padding: 0.875rem 1.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.2;
   font-weight: 600;
+
   border: 1px solid transparent;
   transition:
     color 0.25s ease,
@@ -226,7 +262,7 @@
   @apply btn-base;
   background: var(--accent);
   color: var(--accent-foreground);
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--glow);
   &:hover:not(:disabled) {
     transform: scale(1.03);
   }
@@ -285,9 +321,235 @@
   letter-spacing: 0.35em;
 }
 
-@utility glow-accent {
-  box-shadow: var(--shadow-glow);
+/* --- Fluid type ramp -----------------------------------------------------
+ * Every heading in the app picks one of these `type-*` steps. They own the
+ * size, leading, weight, case and tracking together, so no component mixes
+ * its own `text-5xl font-bold uppercase tracking-tight` combination and no
+ * two pages disagree about what an H2 looks like.
+ * The display family is inherited from the base `h1..h6` rule below; use
+ * `font-display` explicitly only on non-heading elements. */
+@utility type-display {
+  --type-font: var(--font-display);
+  font-family: var(--type-font);
+  font-size: clamp(3.25rem, 10vw, 6.5rem);
+  font-weight: 700;
+  line-height: 0.86;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  text-wrap: balance;
 }
+
+@utility type-h1 {
+  --type-font: var(--font-display);
+  font-family: var(--type-font);
+  font-size: clamp(2.25rem, 6vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+@utility type-h2 {
+  --type-font: var(--font-display);
+  font-family: var(--type-font);
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* Oversized section heading (full-bleed CTA bands). Sits between h1 and h2
+ * so a page never shows two headings at the same size. */
+@utility type-h2-lg {
+  --type-font: var(--font-display);
+  font-family: var(--type-font);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+@utility type-h3 {
+  --type-font: var(--font-display);
+  font-family: var(--type-font);
+  font-size: clamp(1.25rem, 2.2vw, 1.625rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+@utility type-h4 {
+  --type-font: var(--font-display);
+  font-family: var(--type-font);
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+
+/* Body copy steps. `type-lead` is the paragraph under a heading. */
+@utility type-lead {
+  --type-font: var(--font-sans);
+  font-family: var(--type-font);
+  font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+@utility type-body {
+  --type-font: var(--font-sans);
+  font-family: var(--type-font);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+/* Uppercase UI label (buttons, nav, chips) — one shape for all of them. */
+@utility type-label {
+  --type-font: var(--font-sans);
+  font-family: var(--type-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+@utility type-micro {
+  --type-font: var(--font-sans);
+  font-family: var(--type-font);
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* Handwritten accent voice — the single place the script face is allowed. */
+@utility type-script {
+  --type-font: var(--font-script);
+  font-family: var(--type-font);
+  /* Script faces read ~15% smaller at the same px, so this step sits a touch
+     above `type-h2` optically while measuring the same band. */
+  font-size: clamp(2rem, 3.9vw, 3.125rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Secondary body step — UI copy, list rows, dialog text. Replaces every
+ * ad-hoc `text-sm` in app components. */
+@utility type-body-sm {
+  --type-font: var(--font-sans);
+  font-family: var(--type-font);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Emphasised body run — form labels, key/value rows, inline stats. The single
+ * replacement for every `type-body font-semibold` / `font-bold` pairing. */
+@utility type-body-strong {
+  --type-font: var(--font-sans);
+  font-family: var(--type-font);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.65;
+}
+
+/* Small pill/badge text (tech tags, status chips). Same size as `type-micro`
+ * but keeps its natural case, so tech names read as written. */
+@utility type-tag {
+  --type-font: var(--font-sans);
+  font-family: var(--type-font);
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+}
+
+/* Dense meta line: dates, org · location, inline facts. Replaces `text-xs
+ * font-semibold`. Case and color stay with the caller. */
+@utility type-meta {
+  --type-font: var(--font-sans);
+  font-family: var(--type-font);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.005em;
+}
+
+/* Form/control text (inputs, selects, search). One shape for all fields. */
+@utility type-control {
+  --type-font: var(--font-sans);
+  font-family: var(--type-font);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Brand wordmark lockup (the "MS" badge + stacked name). Size is the only
+ * thing a caller may override, via `--wordmark-size`. */
+@utility type-wordmark {
+  --type-font: var(--font-display);
+  font-family: var(--type-font);
+  font-size: var(--wordmark-size, 0.875rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  font-feature-settings: "kern" 1;
+}
+
+
+
+/* Heading entrance: rises and settles its tracking. Pair with `--type-delay`
+ * for staggered lines. Honors reduced motion via the block at the bottom. */
+@utility type-in {
+  animation: type-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--type-delay, 0s);
+}
+
+/* Stagger steps for stacked headings/lines — no inline style objects needed. */
+@utility type-delay-1 {
+  --type-delay: 0.08s;
+}
+@utility type-delay-2 {
+  --type-delay: 0.16s;
+}
+@utility type-delay-3 {
+  --type-delay: 0.24s;
+}
+@utility type-delay-4 {
+  --type-delay: 0.32s;
+}
+
+/* Accent word inside a heading: the gold ink-swipe underline draws on reveal. */
+@utility type-mark {
+  position: relative;
+  color: var(--accent);
+  white-space: nowrap;
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0.06em;
+    height: 0.08em;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--accent) 55%, transparent);
+    transform-origin: left center;
+    animation: mark-swipe 0.7s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+
+
 
 @utility grid-bg {
   background-image: radial-gradient(
@@ -303,13 +565,162 @@
     box-shadow 0.35s ease;
   &:hover {
     transform: translateY(-8px);
-    box-shadow: var(--shadow-lift);
+    box-shadow: var(--lift);
+  }
+}
+
+/* --- Layout rhythm -------------------------------------------------------
+ * The single source of truth for page gutters, content widths and section
+ * vertical rhythm. No component may hand-roll `px-4 sm:px-8 md:px-12`,
+ * `mx-auto max-w-*` or an ad-hoc `py-16/20/24/28` again.
+ * ------------------------------------------------------------------------ */
+
+/* Responsive horizontal page gutter (replaces px-4 sm:px-8 md:px-12 / px-5). */
+@utility page-gutter {
+  padding-inline: var(--gutter);
+}
+
+/* Cancel the page gutter so a child can span the full shell width (sticky bars). */
+@utility bleed-gutter {
+  margin-inline: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+}
+
+/* Full-bleed band: owns the background + the gutter, centres nothing. */
+@utility section-shell {
+  width: 100%;
+  background-color: var(--background);
+  color: var(--foreground);
+  padding-inline: var(--gutter);
+}
+
+/* --- Control padding steps ----------------------------------------------
+ * One padding step per control size. Chips, tabs and filter pills must not
+ * hand-roll `px-4 sm:px-5 py-2 sm:py-2.5` again. */
+
+/* Interactive chip / tab / filter pill. */
+@utility pill-step {
+  padding-inline: var(--pad-pill-x);
+  padding-block: var(--pad-pill-y);
+}
+
+/* Tiny count badge or tag sitting inside a pill or card. */
+@utility tag-step {
+  padding-inline: var(--pad-tag-x);
+  padding-block: var(--pad-tag-y);
+}
+
+/* Card interior padding — the single card step (replaces p-5 sm:p-6). */
+@utility pad-card {
+  padding: var(--pad-card);
+}
+
+@utility pad-card-x {
+  padding-inline: var(--pad-card);
+}
+
+@utility pad-card-y {
+  padding-block: var(--pad-card);
+}
+
+
+/* Centred content measures. Width only — never padding, never background. */
+@utility container-page {
+  width: 100%;
+  max-inline-size: 72rem;
+  margin-inline: auto;
+}
+
+@utility container-narrow {
+  width: 100%;
+  max-inline-size: 64rem;
+  margin-inline: auto;
+}
+
+@utility container-prose {
+  width: 100%;
+  max-inline-size: 56rem;
+  margin-inline: auto;
+}
+
+/* Section vertical rhythm — three steps, fluid, used by every band. */
+@utility section-y {
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+}
+
+@utility section-y-sm {
+  padding-block: clamp(2rem, 4vw, 3rem);
+}
+
+@utility section-y-lg {
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+/* Fixed-navbar clearance. The single source of truth for the top padding of
+   every first-in-page block — no route may hand-roll `pt-24 sm:pt-28`. */
+@utility nav-offset {
+  padding-top: clamp(5.5rem, 8vw, 7rem);
+}
+
+/* Same clearance, hero scale: the home/404 heroes need extra breathing room. */
+@utility nav-offset-lg {
+  padding-top: clamp(7rem, 11vw, 10rem);
+}
+
+/* --- Surfaces -------------------------------------------------------------
+ * One card surface for the whole app: radius, border, background, elevation.
+ * Callers add padding from the p-6 / p-8 step only — never their own radius,
+ * border, background or `shadow-md/lg/xl`.
+ * ---------------------------------------------------------------------- */
+@utility surface-card {
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--card-foreground);
+  box-shadow: var(--glow);
+}
+
+/* Card surface that reacts to pointer: lift + accent border on hover. */
+@utility surface-card-interactive {
+  @apply surface-card;
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1),
+    border-color 0.25s ease,
+    box-shadow 0.35s ease;
+  &:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in oklab, var(--accent) 50%, transparent);
+    box-shadow: var(--lift);
+  }
+}
+
+/* Neutral card-coloured button (the "secondary" action next to btn-accent). */
+@utility btn-surface {
+  @apply btn-base;
+  background: var(--card);
+  color: var(--card-foreground);
+  border-color: var(--border);
+  box-shadow: var(--glow);
+  &:hover:not(:disabled) {
+    transform: scale(1.03);
+    border-color: color-mix(in oklab, var(--accent) 50%, transparent);
   }
 }
 
 
+
+
 :root {
   --radius: 1.25rem;
+
+  /* Layout + control spacing scale (single source of truth) */
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --pad-card: clamp(1.25rem, 2.2vw, 1.5rem);
+  --pad-pill-x: clamp(1rem, 1.6vw, 1.25rem);
+  --pad-pill-y: clamp(0.5rem, 0.9vw, 0.625rem);
+  --pad-tag-x: 0.5rem;
+  --pad-tag-y: 0.125rem;
+
 
   /* Coral / Dark editorial theme (default) */
   --background: #FF4B35;
@@ -332,13 +743,15 @@
   --input: rgba(255, 255, 255, 0.2);
   --ring: #FFD000;
 
+  /* Fixed brand coral — identical in both themes (logo lockup only). */
+  --brand: #FF4B35;
   --accent-muted: rgba(255, 208, 0, 0.2);
   --success: #22c55e;
   --overlay: rgba(0, 0, 0, 0.5);
   --overlay-foreground: #ffffff;
 
-  --shadow-glow: 0 20px 45px rgba(160, 20, 0, 0.35);
-  --shadow-lift: 0 24px 50px rgba(160, 20, 0, 0.4);
+  --glow: 0 20px 45px rgba(160, 20, 0, 0.35);
+  --lift: 0 24px 50px rgba(160, 20, 0, 0.4);
   --gradient-media: linear-gradient(135deg, #D93623, #B82816);
 
   /* Social brand tiles (footer) */
@@ -380,16 +793,18 @@
   --input: rgba(0, 0, 0, 0.12);
   --ring: #FF4B35;
 
+  --brand: #FF4B35;
   --accent-muted: rgba(255, 75, 53, 0.12);
   --success: #16a34a;
 
-  --shadow-glow: 0 16px 36px rgba(0, 0, 0, 0.08);
-  --shadow-lift: 0 20px 40px rgba(0, 0, 0, 0.12);
+  --glow: 0 16px 36px rgba(0, 0, 0, 0.08);
+  --lift: 0 20px 40px rgba(0, 0, 0, 0.12);
 
-  /* Scrollbar (light mode) */
-  --scrollbar-track: rgba(0, 0, 0, 0.05);
-  --scrollbar-thumb: rgba(0, 0, 0, 0.2);
-  --scrollbar-thumb-hover: #FF4B35;
+  /* Scrollbar (light mode) — solid brand thumb stays visible before hover */
+  --scrollbar-size: 12px;
+  --scrollbar-track: #DEDAD0;
+  --scrollbar-thumb: #FF4B35;
+  --scrollbar-thumb-hover: #D93623;
 }
 
 @layer base {
@@ -451,57 +866,40 @@
     overflow-wrap: break-word;
   }
 
+  /* Every heading level inherits the display face + optical defaults so a
+     component never has to restate `font-display` on an h1..h6. Size, weight
+     and case come from the `type-*` ramp (utilities layer beats this). */
   h1,
   h2,
-  h3 {
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
+    font-weight: 700;
     letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
   }
 
   /* ---------------------------------------------------------------
-     Arabic / RTL typography
-     - Arabic script is cursive: letter-spacing breaks word shaping,
-       and the Latin display faces have no Arabic glyphs.
-     - So in Arabic we swap every family to the Arabic stack and
-       neutralise tracking / uppercase transforms.
+     RTL typography (direction-driven only).
+     Language-driven Arabic rules live outside @layer base below, so
+     they can beat Tailwind's font-family utilities.
   ----------------------------------------------------------------- */
-  :root[lang="ar"],
-  [dir="rtl"] body {
-    font-family: var(--font-arabic);
-  }
-
   [dir="rtl"] body,
-  [dir="rtl"] h1,
-  [dir="rtl"] h2,
-  [dir="rtl"] h3,
-  [dir="rtl"] h4,
-  [dir="rtl"] h5,
-  [dir="rtl"] h6,
-  [dir="rtl"] button,
-  [dir="rtl"] input,
-  [dir="rtl"] textarea,
-  [dir="rtl"] select {
+  [dir="rtl"] :where(h1, h2, h3, h4, h5, h6, button, input, textarea, select) {
     font-family: var(--font-arabic);
   }
 
-  [dir="rtl"] h1,
-  [dir="rtl"] h2,
-  [dir="rtl"] h3 {
+  [dir="rtl"] :where(h1, h2, h3) {
     letter-spacing: 0;
     line-height: 1.25;
   }
-
-  /* Kill Tailwind tracking/uppercase utilities for Arabic text nodes */
-  :root[lang="ar"] *:not(.keep-latin):not(.keep-latin *) {
-    letter-spacing: normal !important;
-    text-transform: none !important;
-  }
-
-  /* Latin-only bits (logo, tech names, code) keep their original face */
-  .keep-latin {
-    font-family: var(--font-display);
-  }
-
 
   ::selection {
     background-color: var(--accent);
@@ -509,15 +907,38 @@
   }
 }
 
-/* Outside @layer base so it beats Tailwind font-family utilities
-   (font-sans / font-display / arbitrary font-['Oswald'] classes)
-   when the page is in Arabic. */
+/* Latin-only fragments (brand, tech names, URLs, numbers). The family is NOT
+   hard-coded here: it follows whichever `type-*` step the element carries via
+   `--type-font`, so a tech tag stays sans and the wordmark stays display.
+   That removes the old conflict where `.keep-latin` overrode the type ramp. */
+.keep-latin {
+  font-family: var(--type-font, var(--font-sans));
+}
+
+/* Gutters never stack. A band nested inside an already-gutted shell drops its
+   own horizontal padding, so a section reads the same on the home page
+   (full-bleed) and inside a contained page shell. Unlayered on purpose: it
+   must beat the `@utility` layer without `!important`. */
+.page-gutter :is(.page-gutter, .section-shell),
+.section-shell :is(.page-gutter, .section-shell) {
+  padding-inline: 0;
+}
+
+
+
+/* Arabic mode. These rules sit outside @layer base on purpose: unlayered CSS
+   beats Tailwind's utilities layer, so they win over `font-sans`,
+   `tracking-*` and `uppercase` WITHOUT `!important` — that keeps the cascade
+   predictable and leaves per-element overrides possible. */
 :root[lang="ar"] *:not(.keep-latin):not(.keep-latin *) {
   font-family: var(--font-arabic);
+  /* Arabic script has no case and joins its letters: tracking and uppercase
+     break the shaping, so both are neutralised for the whole tree. */
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 :root[lang="ar"] body:not(.keep-latin) {
-  font-family: var(--font-arabic);
   /* Cairo reads better with a touch more leading and no synthetic weight jumps */
   line-height: 1.75;
   font-optical-sizing: auto;
@@ -525,17 +946,24 @@
 
 :root[lang="ar"] :where(h1, h2, h3, h4, h5, h6):not(.keep-latin):not(.keep-latin *) {
   line-height: 1.35;
-  letter-spacing: 0;
   word-spacing: 0.02em;
 }
 
-/* Latin fragments (brand, tech names, URLs, numbers) keep their Latin face
-   and their own LTR flow so punctuation doesn't jump sides. */
-:root[lang="ar"] .keep-latin,
-:root[lang="ar"] .keep-latin * {
-  font-family: var(--font-display);
+/* Arabic headings are optically lighter than Oswald at the same size, so the
+   display steps get a small size + weight compensation. */
+:root[lang="ar"] .type-display:not(.keep-latin),
+:root[lang="ar"] .type-h1:not(.keep-latin),
+:root[lang="ar"] .type-h2:not(.keep-latin),
+:root[lang="ar"] .type-h2-lg:not(.keep-latin) {
+  font-weight: 800;
 }
 
+:root[lang="ar"] .type-h3:not(.keep-latin),
+:root[lang="ar"] .type-h4:not(.keep-latin) {
+  font-weight: 700;
+}
+
+/* Latin fragments keep their own LTR flow so punctuation doesn't jump sides. */
 :root[lang="ar"] .keep-latin {
   unicode-bidi: isolate;
 }
@@ -544,6 +972,7 @@
 :root[lang="ar"] :where(p, li, span, h1, h2, h3, h4, blockquote) {
   unicode-bidi: isolate;
 }
+
 
 /* Icons/arrows authored for LTR flip with the document direction */
 [dir="rtl"] .rtl-flip {
@@ -556,6 +985,24 @@
 ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+}
+
+/* While the snapshot animates, freeze everything else that would otherwise
+   compete for the compositor: looping animations, scroll-driven effects and
+   costly blurs. This is what makes the reveal feel instant instead of laggy. */
+html.theme-transitioning * {
+  transition: none !important;
+  animation-play-state: paused !important;
+}
+
+html.theme-transitioning {
+  /* No hover/scroll work mid-transition, and no scrollbar reflow jitter. */
+  pointer-events: none;
+}
+
+html.theme-transitioning :where([class*="backdrop-blur"]) {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 /* Outgoing theme stays put; incoming theme is clipped open from the toggle */
@@ -573,9 +1020,161 @@ html.theme-transition-reverse::view-transition-new(root) {
   z-index: 1;
 }
 
+@keyframes pen-writing {
+  0%   { transform: translateY(0) rotate(-8deg); }
+  50%  { transform: translateY(-2px) rotate(-2deg); }
+  100% { transform: translateY(0) rotate(-8deg); }
+}
+
+.pen-writing {
+  animation: pen-writing 0.28s ease-in-out infinite;
+  transform-origin: bottom left;
+}
+
+/* ---------------------------------------------------------------------------
+ * First-load splash (AppPreloader)
+ * SSR-rendered so it is part of the first paint. The bootstrap script sets
+ * html[data-preloaded] for repeat visits / reduced motion, which removes it
+ * before it can paint.
+ * ------------------------------------------------------------------------ */
+:root[data-preloaded] .app-preloader {
+  display: none !important;
+}
+
+:root[data-preloading] body {
+  overflow: hidden;
+}
+
+.app-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: var(--background);
+  opacity: 1;
+  transition: opacity 520ms ease, visibility 520ms ease;
+}
+
+.app-preloader::after {
+  content: "";
+  position: absolute;
+  inset: -20% 30% 40% -10%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 30% 30%,
+    color-mix(in oklab, var(--accent) 22%, transparent),
+    transparent 65%
+  );
+  filter: blur(60px);
+}
+
+.app-preloader[data-leaving] {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.app-preloader__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.375rem;
+}
+
+.app-preloader__art {
+  width: clamp(7rem, 26vw, 11rem);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  animation: preloader-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-preloader__mark {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+}
+
+.app-preloader__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+  animation: preloader-rise 700ms 90ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-preloader__role {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  animation: preloader-rise 700ms 160ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-preloader__bar {
+  margin-top: 1.25rem;
+  width: clamp(9rem, 40vw, 15rem);
+  height: 3px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--foreground) 12%, transparent);
+}
+
+.app-preloader__bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 220ms ease-out;
+}
+
+@keyframes preloader-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Reduced motion — single source of truth. Declared last so it wins over
+ * every animation defined above without needing !important.
+ * ------------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .enter-up,
+  .skeleton-shimmer,
+  .pen-writing,
+  .type-in,
+  .type-mark::after,
+  .app-preloader__art,
+  .app-preloader__name,
+  .app-preloader__role {
+    animation: none;
+  }
+
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none !important;
+  }
+
+  .app-preloader {
+    display: none !important;
   }
 }

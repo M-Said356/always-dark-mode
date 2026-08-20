@@ -12,6 +12,7 @@ import {
   ChevronDown,
   ShieldCheck,
 } from "lucide-react";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { useI18n } from "@/lib/i18n";
 import { credentials, credentialTabs, type CredentialTab } from "@/data";
 
@@ -54,23 +55,10 @@ export function ExperiencePreview() {
   return (
     <section
       id="events"
-      className="w-full bg-background py-20 px-4 sm:px-8 md:px-12 text-foreground"
+      className="section-shell section-y"
     >
-      <div className="mx-auto max-w-5xl">
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 24 }}
-          whileInView={reduce ? {} : { opacity: 1, y: 0 }}
-
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.5, ease: EASE }}
-        >
-          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-center tracking-tight">
-            {tr("events.title")}
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-center text-sm sm:text-base text-muted-foreground">
-            {tr("events.desc")}
-          </p>
-        </motion.div>
+      <div className="container-narrow">
+        <SectionHeading title={tr("events.title")} description={tr("events.desc")} />
 
         {/* Tabs */}
         <div
@@ -91,7 +79,7 @@ export function ExperiencePreview() {
                   setActiveTab(id);
                   setOpenId(null);
                 }}
-                className={`relative inline-flex items-center gap-2 whitespace-nowrap rounded-xl px-5 py-2.5 font-sans text-xs font-black uppercase tracking-[0.18em] transition-colors ${
+                className={`relative inline-flex items-center gap-2 whitespace-nowrap pill-step rounded-xl type-label transition-colors ${
                   active
                     ? "text-background"
                     : "border border-border bg-foreground/5 text-foreground hover:bg-foreground/15"
@@ -110,7 +98,7 @@ export function ExperiencePreview() {
                   <Icon className="size-3.5" />
                   {tr(`events.tab.${id}`)}
                   <span
-                    className={`rounded-md px-1.5 py-0.5 text-[10px] ${
+                    className={`tag-step rounded-md type-tag ${
                       active ? "bg-background/20" : "bg-foreground/10"
                     }`}
                   >
@@ -133,7 +121,7 @@ export function ExperiencePreview() {
             className="flex flex-col gap-4"
           >
             {items.length === 0 && (
-              <p className="text-center text-sm text-muted-foreground">{tr("events.empty")}</p>
+              <p className="text-center type-body text-muted-foreground">{tr("events.empty")}</p>
             )}
 
             {items.map((item) => {
@@ -147,19 +135,19 @@ export function ExperiencePreview() {
                   transition={{ duration: 0.25, ease: EASE }}
                   className={`overflow-hidden rounded-2xl ${
                     featured
-                      ? "bg-foreground text-background shadow-[var(--shadow-glow)]"
+                      ? "bg-foreground text-background shadow-glow"
                       : "border border-border bg-card text-card-foreground shadow-md hover:shadow-lg"
                   }`}
                 >
                   <button
                     onClick={() => setOpenId(open ? null : item.id)}
                     aria-expanded={open}
-                    className="flex w-full flex-col gap-4 p-5 text-start sm:flex-row sm:items-center sm:justify-between sm:p-6"
+                    className="flex w-full flex-col gap-4 pad-card text-start sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div className="flex items-center gap-5 sm:gap-7">
                       <span
                         dir="ltr"
-                        className="min-w-10 font-['Oswald',sans-serif] text-sm font-bold opacity-80"
+                        className="min-w-10 type-wordmark [--wordmark-size:0.875rem] opacity-80"
                       >
                         {item.year}
                       </span>
@@ -175,11 +163,9 @@ export function ExperiencePreview() {
                       </div>
 
                       <div className="min-w-0">
-                        <h3 className="font-['Oswald',sans-serif] text-lg sm:text-xl font-bold leading-tight tracking-tight">
-                          {item.title[lang]}
-                        </h3>
+                        <h3 className="type-h4">{item.title[lang]}</h3>
                         <p
-                          className={`mt-1 text-xs font-semibold ${
+                          className={`mt-1 type-meta ${
                             featured ? "opacity-80" : "text-muted-foreground"
                           }`}
                         >
@@ -190,7 +176,7 @@ export function ExperiencePreview() {
 
                     <div className="flex items-center gap-3 sm:max-w-[20rem] sm:justify-end">
                       <p
-                        className={`text-xs font-bold sm:text-end ${
+                        className={`type-meta sm:text-end ${
                           featured ? "opacity-90" : "text-muted-foreground"
                         }`}
                       >
@@ -219,11 +205,11 @@ export function ExperiencePreview() {
                         className="overflow-hidden"
                       >
                         <div
-                          className={`border-t px-5 pb-6 pt-5 sm:px-6 ${
+                          className={`border-t pad-card ${
                             featured ? "border-background/20" : "border-border"
                           }`}
                         >
-                          <div className="flex flex-wrap items-center gap-4 text-xs font-semibold">
+                          <div className="flex flex-wrap items-center gap-4 type-meta">
                             <span className="inline-flex items-center gap-1.5 opacity-80">
                               <Calendar className="size-3.5" />
                               {item.period[lang]}
@@ -243,7 +229,7 @@ export function ExperiencePreview() {
                             )}
                             {item.status && (
                               <span
-                                className={`rounded-md px-2 py-0.5 text-[10px] uppercase tracking-wider ${
+                                className={`tag-step rounded-md type-micro ${
                                   featured ? "bg-background/20" : "bg-primary/10 text-primary"
                                 }`}
                               >
@@ -269,7 +255,7 @@ export function ExperiencePreview() {
                               <motion.li
                                 key={point}
                                 variants={rowVariants}
-                                className={`flex gap-2.5 text-sm leading-relaxed ${
+                                className={`flex gap-2.5 type-body-sm ${
                                   featured ? "opacity-90" : "text-muted-foreground"
                                 }`}
                               >
@@ -284,7 +270,7 @@ export function ExperiencePreview() {
                               <span
                                 key={tech}
                                 dir="ltr"
-                                className={`rounded-lg px-2.5 py-1 text-[11px] font-bold ${
+                                className={`rounded-lg px-2.5 py-1 type-tag ${
                                   featured
                                     ? "bg-background/15"
                                     : "bg-foreground/5 border border-border"
@@ -307,7 +293,7 @@ export function ExperiencePreview() {
         <div className="mt-10 flex justify-center">
           <Link
             to="/experience"
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-foreground/5 px-6 py-3 font-sans text-xs font-black uppercase tracking-[0.18em] transition-colors hover:bg-foreground/15"
+            className="inline-flex items-center gap-2 pill-step rounded-xl border border-border bg-foreground/5 type-label transition-colors hover:bg-foreground/15"
           >
             {tr("events.cta")}
             <ArrowRight className="size-3.5 rtl:rotate-180" />

@@ -67,7 +67,7 @@ export function NotFound() {
       contained={false}
       padded={false}
       mainRef={ref}
-      className="relative flex flex-col items-center justify-start overflow-hidden bg-background px-5 pb-12 pt-36"
+      className="section-shell nav-offset relative flex flex-col items-center justify-center overflow-hidden"
     >
       {/* ambient layer */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
@@ -118,12 +118,12 @@ export function NotFound() {
             <motion.span
               aria-hidden
               style={{ x: glowX, y: glowY }}
-              className="absolute inset-0 select-none text-[clamp(6rem,26vw,14rem)] font-black leading-none tracking-tighter text-accent opacity-30 blur-2xl"
+              className="absolute inset-0 select-none type-display text-accent opacity-30 blur-2xl"
             >
               404
             </motion.span>
 
-            <h1 className="relative select-none text-[clamp(6rem,26vw,14rem)] font-black leading-none tracking-tighter text-foreground">
+            <h1 className="relative select-none type-display text-foreground">
               <span className="sr-only">404 — page not found</span>
               <span aria-hidden className="relative inline-block">
                 404
@@ -170,7 +170,7 @@ export function NotFound() {
         <motion.h2
           variants={rise}
           transition={{ duration: 0.5 }}
-          className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+          className="mt-2 type-h3 text-foreground"
         >
           This route drifted off the map
         </motion.h2>
@@ -178,7 +178,7 @@ export function NotFound() {
         <motion.p
           variants={rise}
           transition={{ duration: 0.5 }}
-          className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground"
+          className="mx-auto mt-3 max-w-md type-body text-muted-foreground"
         >
           The page you're after doesn't exist, moved, or never shipped. Here are the paths that
           definitely do.

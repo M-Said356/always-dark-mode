@@ -1,24 +1,63 @@
-# Always Dark Mode
+# Clean Code Canvas
 
-clone + run https://github.com/Mostafa-356/always-dark-view
+A modern portfolio platform for showcasing multi-vendor marketplaces, real-time bidding engines, and high-scale commerce systems.
 
-This project was built with [Lovable](https://lovable.dev).
+## Quick Start
 
-## Build with Lovable
+### Prerequisites
+- Node.js (v18+)
+- npm or yarn
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/502b4c5b-53fe-42cc-92e0-0a7e8b44549f).
+### Installation
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+```bash
+git clone <repository-url>
+cd clean-code-canvas
+npm install
+npm run dev
+```
+
+The app will start at `http://localhost:5173`
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+### Available Scripts
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+- `npm run dev` — Start development server
+- `npm run build` — Build for production
+- `npm run preview` — Preview production build locally
+- `npm run lint` — Run ESLint
+- `npm run format` — Format code with Prettier
+
+## Tech Stack
+
+- **Frontend**: React 19, TanStack Router, TanStack Query
+- **Styling**: Tailwind CSS, Radix UI
+- **Forms**: React Hook Form with Zod validation
+- **Build Tool**: Vite
+- **Animation**: Framer Motion
+
+## Project Structure
+
 ```
+src/
+├── routes/          # TanStack Router pages
+├── components/      # Reusable UI components
+├── lib/            # Utilities and helpers
+├── styles.css      # Global styles
+└── main.tsx        # Entry point
+```
+
+## Features
+
+- Responsive design with Tailwind CSS
+- Type-safe routing with TanStack Router
+- Form validation with Zod
+- Dark/light theme support
+- Smooth scroll animations
+- i18n ready
+
+## License
+
+MIT
+

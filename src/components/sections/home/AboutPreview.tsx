@@ -1,15 +1,17 @@
-import { Play } from "lucide-react";
-import { SmartImage } from "@/components/ui/SmartImage";
-import { IMAGE_SIZES } from "@/lib/image";
+import { ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+const portraitWebp = "/images/portrait-cutout.webp";
+const portraitAvif = "/images/portrait-cutout.avif";
+import { PenTyping } from "@/components/ui/PenTyping";
 
 export function AboutPreview() {
   return (
-    <section className="w-full bg-background py-16 px-4 sm:px-8 md:px-12 text-foreground select-none">
-      <div className="mx-auto max-w-6xl">
-        <div className="relative rounded-2xl bg-card p-8 sm:p-12 md:p-14 border border-border shadow-[var(--shadow-glow)] overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+    <section className="section-shell section-y select-none">
+      <div className="container-page">
+        <div className="relative surface-card overflow-hidden p-6 sm:p-10 lg:p-14">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
             {/* Left Column (5 cols) */}
-            <div className="md:col-span-5 flex flex-col justify-center items-start">
+            <div className="lg:col-span-6 flex flex-col justify-center items-start">
               {/* Logo Prefix */}
               <div className="flex items-center gap-3 mb-6">
                 <div className="flex items-end gap-[2px] opacity-90">
@@ -20,56 +22,60 @@ export function AboutPreview() {
                   </div>
                 </div>
                 <div className="grid place-items-center rounded-[6px] bg-foreground px-2.5 py-0.5 shadow-sm">
-                  <span className="font-['Oswald',sans-serif] text-sm font-bold text-background">
-                    MS
-                  </span>
+                  <span className="type-wordmark text-background">MS</span>
                 </div>
-                <div className="flex flex-col text-start font-sans text-[9px] font-black tracking-[0.2em] text-foreground leading-tight uppercase">
+                <div className="flex flex-col text-start type-micro text-foreground">
                   <span>MOSTAFA</span>
                   <span>SAMIR</span>
                 </div>
               </div>
 
               {/* Headline */}
-              <h2 className="font-['Oswald',sans-serif] text-4xl sm:text-5xl font-bold text-card-foreground leading-[1.0] mb-4">
-                4+ Years of
-                <br />
-                Full Stack Excellence
-              </h2>
+              <PenTyping
+                lines={["4+ Years of", "Full Stack Excellence"]}
+                className="type-script text-card-foreground mb-4"
+              />
 
               {/* Description */}
-              <p className="font-sans text-xs sm:text-sm text-card-foreground/85 leading-relaxed mb-6 max-w-sm">
+              <p className="type-body text-card-foreground/85 mb-6 max-w-sm">
                 Senior Full Stack Engineer specializing in scaling marketplace throughput by 300%
                 using .NET 8, Clean Architecture & Next.js.
               </p>
 
-              {/* CTA Button */}
-              <a
-                href="#view"
-                className="group inline-flex items-center gap-3 rounded-xl bg-background px-6 py-3 shadow-md border border-border transition-transform hover:scale-105"
-              >
-                <span className="grid size-6 place-items-center rounded-xl bg-primary text-primary-foreground">
-                  <Play className="size-3 fill-primary-foreground text-primary-foreground ms-0.5" />
-                </span>
-                <span className="font-sans text-xs font-black tracking-[0.2em] text-foreground uppercase">
-                  VIEW CASE
-                </span>
-              </a>
+              {/* CTA Buttons */}
+              <div className="flex w-full flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                <Link
+                  to="/about"
+                  className="group btn-accent"
+                >
+                  <span className="type-label">ABOUT ME</span>
+                  <ArrowRight className="size-4 transition-transform group-hover:translate-x-1 rtl:rotate-180" />
+                </Link>
+                <Link
+                  to="/projects"
+                  className="group btn-surface"
+                >
+                  <span className="type-label text-foreground">VIEW CASES</span>
+                  <ArrowRight className="size-4 text-foreground transition-transform group-hover:translate-x-1 rtl:rotate-180" />
+                </Link>
+              </div>
             </div>
 
-            {/* Right Column Portfolio Mockup Image (7 cols) */}
-            <div className="md:col-span-7">
-              <div className="relative overflow-hidden rounded-2xl md:rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.45)] border border-border group">
-                <SmartImage
-                  src="/projects/microservices/Shop.jpg"
-                  alt="Multi-tenant marketplace architecture"
-                  width={1280}
-                  height={800}
-                  sizes={IMAGE_SIZES.hero}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
-                {/* Vignette gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+            {/* Right Column portrait (7 cols) */}
+            <div className="lg:col-span-6">
+              <div className="relative mx-auto flex w-full max-w-sm sm:max-w-md items-end justify-center overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-primary/20 via-background to-background shadow-[0_25px_60px_rgba(0,0,0,0.45)]">
+                <div className="pointer-events-none absolute inset-x-6 bottom-0 h-1/2 bg-gradient-to-t from-background to-transparent" />
+                <picture>
+                  <source type="image/avif" srcSet={portraitAvif} />
+                  <img
+                    src={portraitWebp}
+                    alt="Portrait of Mostafa Samir"
+                    width={861}
+                    height={768}
+                    loading="lazy"
+                    className="relative z-10 w-full object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]"
+                  />
+                </picture>
               </div>
             </div>
           </div>

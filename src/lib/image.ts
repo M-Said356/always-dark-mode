@@ -35,6 +35,8 @@ const RESPONSIVE_BASES = new Set([
 interface ResolvedImage {
   src: string;
   srcSet?: string;
+  /** AVIF variants (~30% smaller than the WebP set) for <picture> sources. */
+  avifSrcSet?: string;
 }
 
 const stripExtension = (path: string) => path.replace(/\.(png|jpe?g|webp|avif)$/i, "");
@@ -47,6 +49,7 @@ export function resolveImage(path: string | undefined): ResolvedImage | null {
     return {
       src: `${base}-1280.webp`,
       srcSet: `${base}-640.webp 640w, ${base}-1280.webp 1280w`,
+      avifSrcSet: `${base}-640.avif 640w, ${base}-1280.avif 1280w`,
     };
   }
 
