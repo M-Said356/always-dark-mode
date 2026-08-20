@@ -7,6 +7,7 @@ import { Projects } from "@/components/sections/Projects";
 import { ExperiencePreview } from "@/components/sections/home/ExperiencePreview";
 import { CredentialsCarousel } from "@/components/credentials/CredentialsCarousel";
 import { ContactCta } from "@/components/sections/home/ContactCta";
+import { LazyIsland } from "@/components/ui/LazyIsland";
 import { pageSeo } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 const heroIsoAvif = "/images/hero-iso.avif";
@@ -68,12 +69,12 @@ function Index() {
       <div className="defer-paint">
         <AboutPreview />
       </div>
-      <div className="defer-paint">
+      <LazyIsland className="defer-paint">
         <CredentialsCarousel />
-      </div>
-      <div className="defer-paint">
+      </LazyIsland>
+      <LazyIsland className="defer-paint">
         <ContactCta />
-      </div>
+      </LazyIsland>
     </PageShell>
   );
 }
