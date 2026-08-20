@@ -69,12 +69,12 @@ function Index() {
       <div className="defer-paint">
         <AboutPreview />
       </div>
-      <LazyIsland className="defer-paint">
+      <div className="defer-paint">
         <CredentialsCarousel />
-      </LazyIsland>
-      <LazyIsland className="defer-paint">
+      </div>
+      <div className="defer-paint">
         <ContactCta />
-      </LazyIsland>
+      </div>
     </PageShell>
   );
 }
