@@ -75,6 +75,11 @@ export function LazyIsland({
     };
   }, [hydrated, rootMargin, idleTimeout]);
 
+  if (typeof document === "undefined") {
+    // Server render: emit the full markup so SEO/first paint are unaffected.
+    return <div className={className}>{children}</div>;
+  }
+
   if (!hydrated) {
     return (
       <div
