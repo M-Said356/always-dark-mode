@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { startTransition, useEffect, useRef, useState, type ReactNode } from "react";
 
 type LazyIslandProps = {
   children: ReactNode;
@@ -19,9 +19,9 @@ type LazyIslandProps = {
  */
 export function LazyIsland({
   children,
-  rootMargin = "200px",
+  rootMargin = "120px",
   className,
-  idleTimeout = 4000,
+  idleTimeout = 10000,
 }: LazyIslandProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [hydrated, setHydrated] = useState(false);
@@ -33,21 +33,14 @@ export function LazyIsland({
 
     let cancelled = false;
     const activate = () => {
-      if (!cancelled) setHydrated(true);
+      if (cancelled) return;
+      cancelled = true;
+      startTransition(() => setHydrated(true));
     };
 
     let observer: IntersectionObserver | undefined;
-    if (typeof IntersectionObserver !== "undefined") {
-      observer = new IntersectionObserver(
-        (entries) => {
-          if (entries.some((entry) => entry.isIntersecting)) activate();
-        },
-        { rootMargin },
-      );
-      observer.observe(el);
-    } else {
-      activate();
-    }
+    let idleHandle: number | undefined;
+    let timeoutHandle: number | undefined;
 
     const ric = (
       window as typeof window & {
@@ -55,12 +48,29 @@ export function LazyIsland({
         cancelIdleCallback?: (handle: number) => void;
       }
     ).requestIdleCallback;
-    let idleHandle: number | undefined;
-    let timeoutHandle: number | undefined;
-    if (ric) {
-      idleHandle = ric(activate, { timeout: idleTimeout });
-    } else {
+
+    // Wait for the main thread to settle before even wiring up the observer,
+    // so island hydration never competes with the initial render/paint.
+    const schedule = () => {
+      if (cancelled) return;
+      if (typeof IntersectionObserver === "undefined") {
+        activate();
+        return;
+      }
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) activate();
+        },
+        { rootMargin },
+      );
+      observer.observe(el);
       timeoutHandle = window.setTimeout(activate, idleTimeout);
+    };
+
+    if (ric) {
+      idleHandle = ric(schedule, { timeout: 2000 });
+    } else {
+      timeoutHandle = window.setTimeout(schedule, 300);
     }
 
     return () => {
