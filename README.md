@@ -1,29 +1,63 @@
-# Welcome to your Lovable project
+# Clean Code Canvas
 
-This project was built with [Lovable](https://lovable.dev).
+A modern portfolio platform for showcasing multi-vendor marketplaces, real-time bidding engines, and high-scale commerce systems.
 
-## Build with Lovable
+## Quick Start
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+### Prerequisites
+- Node.js (v18+)
+- npm or yarn
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+### Installation
 
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+```bash
+git clone <repository-url>
+cd clean-code-canvas
+npm install
 npm run dev
 ```
 
-## Built with
+The app will start at `http://localhost:5173`
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+## Development
+
+### Available Scripts
+
+- `npm run dev` — Start development server
+- `npm run build` — Build for production
+- `npm run preview` — Preview production build locally
+- `npm run lint` — Run ESLint
+- `npm run format` — Format code with Prettier
+
+## Tech Stack
+
+- **Frontend**: React 19, TanStack Router, TanStack Query
+- **Styling**: Tailwind CSS, Radix UI
+- **Forms**: React Hook Form with Zod validation
+- **Build Tool**: Vite
+- **Animation**: Framer Motion
+
+## Project Structure
+
+```
+src/
+├── routes/          # TanStack Router pages
+├── components/      # Reusable UI components
+├── lib/            # Utilities and helpers
+├── styles.css      # Global styles
+└── main.tsx        # Entry point
+```
+
+## Features
+
+- Responsive design with Tailwind CSS
+- Type-safe routing with TanStack Router
+- Form validation with Zod
+- Dark/light theme support
+- Smooth scroll animations
+- i18n ready
+
+## License
+
+MIT
+

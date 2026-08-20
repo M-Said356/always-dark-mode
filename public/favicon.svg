@@ -1,13 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="MS Marketplace">
+  <title>MS Marketplace</title>
   <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#D8A54D;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#8B6F47;stop-opacity:1" />
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF5B44"/>
+      <stop offset="1" stop-color="#E23520"/>
     </linearGradient>
   </defs>
-  <rect width="100" height="100" fill="#1a1a1a"/>
-  <path d="M 20 80 L 40 40 L 60 60 L 80 30" stroke="url(#grad)" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="40" cy="40" r="3" fill="#D8A54D"/>
-  <circle cx="60" cy="60" r="3" fill="#D8A54D"/>
-  <circle cx="80" cy="30" r="3" fill="#D8A54D"/>
+  <rect width="64" height="64" rx="15" fill="url(#tile)"/>
+  <g fill="#FFFFFF">
+<path d="M105 0V1600H583L703 979L741 229H819L855 979L977 1600H1453V0H1189V494L1235 1373H1147L1057 468L940 2H610L503 468L412 1373H325L370 494V0Z" transform="translate(6.027 49.0) scale(0.02101 -0.02101)"/>
+<path d="M475 -18Q269 -18 177.5 66.0Q86 150 78 346Q77 385 77.0 427.0Q77 469 79.0 511.0Q81 553 85 594H327Q323 516 322.5 441.5Q322 367 327 301Q332 246 368.0 219.5Q404 193 474 193Q541 193 575.5 219.5Q610 246 616 301Q620 338 621.0 376.5Q622 415 620.5 453.5Q619 492 616 529Q612 582 581.5 618.5Q551 655 497 668L336 705Q238 728 181.5 775.0Q125 822 100.0 895.0Q75 968 72 1068Q71 1118 71.0 1163.5Q71 1209 72 1256Q77 1386 119.5 1465.5Q162 1545 248.5 1581.5Q335 1618 474 1618Q677 1618 768.0 1534.5Q859 1451 866 1256Q868 1207 867.0 1141.0Q866 1075 863 1014H616Q619 1089 620.0 1160.0Q621 1231 618 1301Q616 1355 580.0 1381.0Q544 1407 474 1407Q406 1407 370.5 1381.0Q335 1355 329 1301Q324 1242 324.0 1184.5Q324 1127 329 1068Q333 1014 356.0 978.0Q379 942 431 931L575 900Q681 876 745.5 827.5Q810 779 840.0 704.5Q870 630 874 529Q875 500 875.0 468.5Q875 437 874.5 406.0Q874 375 872 346Q864 150 772.0 66.0Q680 -18 475 -18Z" transform="translate(37.379 49.0) scale(0.02101 -0.02101)"/>
+  </g>
 </svg>

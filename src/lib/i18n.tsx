@@ -127,6 +127,15 @@ const t: Dict = {
     ar: "بلا ضغط — رد خلال 24 ساعة.",
   },
   "welcome.close": { en: "Close welcome message", ar: "إغلاق رسالة الترحيب" },
+  "welcome.autoclose": { en: "Closing in {s}s", ar: "الإغلاق بعد {s} ثانية" },
+  "welcome.paused": { en: "Paused", ar: "متوقف مؤقتاً" },
+  "welcome.autocloseLabel": { en: "Auto close", ar: "إغلاق تلقائي" },
+  "welcome.description": {
+    en: "This dialog closes automatically in a few seconds. Hover, focus, or touch inside to pause.",
+    ar: "يُغلق هذا الحوار تلقائياً خلال ثوانٍ. مرّر المؤشر أو ركّز أو المس داخله للإيقاف المؤقت.",
+  },
+
+
 
   "footer.headline1": { en: "You can find", ar: "يمكنك أن تجدني" },
   "footer.headline2": { en: "me here:", ar: "هنا:" },
@@ -214,6 +223,17 @@ const t: Dict = {
   "skills.page.desc": {
     en: "The complete toolkit — from .NET 8 microservices down to Redis distributed caching and Next.js frontends.",
     ar: "مجموعة الأدوات الكاملة — من الخدمات المصغّرة بـ .NET 8 إلى التخزين المؤقت الموزّع بـ Redis وواجهات Next.js.",
+  },
+  "cta.band.eyebrow": { en: "NEXT STEP", ar: "الخطوة التالية" },
+  "experience.cta.title": { en: "Like the track record?", ar: "أعجبك السجل المهني؟" },
+  "experience.cta.desc": {
+    en: "See the systems behind these roles, or tell me what you are building next.",
+    ar: "شاهد الأنظمة خلف هذه الأدوار، أو أخبرني بما تبنيه بعد ذلك.",
+  },
+  "skills.cta.title": { en: "Put this stack to work", ar: "لنضع هذه التقنيات في العمل" },
+  "skills.cta.desc": {
+    en: "Browse the projects where this toolkit shipped, or start a conversation.",
+    ar: "تصفح المشاريع التي استُخدمت فيها هذه الأدوات، أو ابدأ محادثة.",
   },
   "skills.page.projectsCta": { en: "See Projects", ar: "شاهد المشاريع" },
   "skills.page.contactCta": { en: "Work With Me", ar: "لنعمل معاً" },

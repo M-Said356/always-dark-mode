@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 type CtaVariant = "primary" | "secondary";
 
 const VARIANTS: Record<CtaVariant, string> = {
-  primary: "bg-primary text-primary-foreground",
-  secondary: "border border-border bg-card text-card-foreground",
+  primary: "btn-accent",
+  secondary: "btn-surface",
 };
 
 type CtaLinkProps = LinkComponentProps & {
@@ -27,7 +27,7 @@ export function CtaLink({
     <Link
       {...linkProps}
       className={cn(
-        "inline-flex items-center gap-2 rounded-xl px-6 py-3 font-sans text-xs font-black uppercase tracking-widest shadow-md transition-transform hover:scale-105",
+        "type-label",
         VARIANTS[variant],
         className as string,
       )}

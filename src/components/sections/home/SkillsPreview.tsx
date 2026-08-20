@@ -12,15 +12,15 @@ export function SkillsPreview() {
   const featured = skillGroups.slice(0, 4);
 
   return (
-    <section id="skills" className="scroll-mt-24 bg-background py-24">
-      <div className="mx-auto max-w-5xl px-5">
+    <section id="skills" className="section-shell section-y scroll-mt-24">
+      <div className="container-narrow">
         <SectionHeading title={tr("skills.title")} />
 
         <div className="grid gap-4 sm:grid-cols-2">
           {featured.map((group, i) => (
             <Reveal key={group.title} delay={i * 0.08}>
-              <div className="bg-card border border-border h-full rounded-2xl p-6 shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-1">
-                <h3 className="mb-4 flex items-center gap-3 text-lg font-bold">
+              <div className="bg-card border border-border h-full rounded-2xl p-6 shadow-glow transition-transform hover:-translate-y-1">
+                <h3 className="mb-4 flex items-center gap-3 type-h4">
                   <span className="size-2 rounded-full bg-accent" />
                   {skillGroupTitle(group.title)}
                 </h3>
@@ -29,13 +29,13 @@ export function SkillsPreview() {
                     <span
                       key={skill}
                       dir="ltr"
-                      className="rounded-xl border border-border bg-foreground/10 px-3 py-1.5 text-sm text-foreground/80"
+                      className="rounded-xl border border-border bg-foreground/10 px-3 py-1.5 type-body text-foreground/80"
                     >
                       {skill}
                     </span>
                   ))}
                   {group.skills.length > 5 && (
-                    <span className="rounded-xl px-3 py-1.5 text-sm font-semibold text-accent">
+                    <span className="rounded-xl px-3 py-1.5 type-body-strong text-accent">
                       +{group.skills.length - 5}
                     </span>
                   )}

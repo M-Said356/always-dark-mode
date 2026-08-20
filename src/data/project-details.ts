@@ -156,7 +156,8 @@ const categoryFeatures: Record<ProjectCategory, ProjectFeature[]> = {
     },
     {
       title: "Showroom-grade visuals",
-      description: "Full-bleed imagery and room-context galleries built on a responsive media layer.",
+      description:
+        "Full-bleed imagery and room-context galleries built on a responsive media layer.",
     },
   ],
   Dashboard: [
@@ -182,7 +183,8 @@ const categoryFeatures: Record<ProjectCategory, ProjectFeature[]> = {
     },
     {
       title: "Audit trail",
-      description: "Every mutation recorded with actor, timestamp and previous value for traceability.",
+      description:
+        "Every mutation recorded with actor, timestamp and previous value for traceability.",
     },
   ],
   Web3: [
@@ -208,7 +210,8 @@ const categoryFeatures: Record<ProjectCategory, ProjectFeature[]> = {
     },
     {
       title: "Containerised delivery",
-      description: "Per-service containers with environment-driven configuration for repeatable deployments.",
+      description:
+        "Per-service containers with environment-driven configuration for repeatable deployments.",
     },
   ],
   Sports: [
@@ -223,7 +226,8 @@ const categoryFeatures: Record<ProjectCategory, ProjectFeature[]> = {
     },
     {
       title: "Results & progress",
-      description: "Performance entries tracked over time and rendered as personal-best and trend views.",
+      description:
+        "Performance entries tracked over time and rendered as personal-best and trend views.",
     },
     {
       title: "Announcements",
@@ -231,7 +235,8 @@ const categoryFeatures: Record<ProjectCategory, ProjectFeature[]> = {
     },
     {
       title: "Responsive-first UI",
-      description: "Designed for poolside phone use before desktop — large targets, minimal chrome.",
+      description:
+        "Designed for poolside phone use before desktop — large targets, minimal chrome.",
     },
   ],
   "Tech Accessories": [
@@ -242,7 +247,8 @@ const categoryFeatures: Record<ProjectCategory, ProjectFeature[]> = {
     },
     {
       title: "Comparison view",
-      description: "Side-by-side spec comparison so buyers resolve compatibility questions in-page.",
+      description:
+        "Side-by-side spec comparison so buyers resolve compatibility questions in-page.",
     },
     {
       title: "Cart & checkout",
@@ -254,7 +260,8 @@ const categoryFeatures: Record<ProjectCategory, ProjectFeature[]> = {
     },
     {
       title: "Component-driven UI",
-      description: "Strongly typed, reusable component library keeping the interface consistent at scale.",
+      description:
+        "Strongly typed, reusable component library keeping the interface consistent at scale.",
     },
   ],
   Backend: [
@@ -279,7 +286,8 @@ const categoryFeatures: Record<ProjectCategory, ProjectFeature[]> = {
     },
     {
       title: "Data access layer",
-      description: "Repository abstraction over the database with paging, filtering and projection support.",
+      description:
+        "Repository abstraction over the database with paging, filtering and projection support.",
     },
   ],
 };
@@ -295,8 +303,7 @@ const categoryChallenge: Record<ProjectCategory, string> = {
     "Configurable, high-value goods combined with wallet-based settlement meant two normally separate flows — product configuration and on-chain transaction — had to feel like one checkout.",
   Dashboard:
     "Operators needed truth about stock right now, not a report from this morning, while still being able to act on it in bulk without losing an audit trail.",
-  Web3:
-    "A single deployable could not absorb catalog traffic, order processing and chain interaction at the same time without one slow path degrading the others.",
+  Web3: "A single deployable could not absorb catalog traffic, order processing and chain interaction at the same time without one slow path degrading the others.",
   Sports:
     "Club coordination lived in messaging apps and spreadsheets, so schedules, rosters and results drifted out of sync and nobody trusted a single source.",
   "Tech Accessories":
@@ -316,8 +323,7 @@ const categorySolution: Record<ProjectCategory, string> = {
     "Configuration resolves into a concrete SKU before the wallet ever opens, and the on-chain step is isolated behind its own boundary with a conventional payment fallback.",
   Dashboard:
     "A live data layer keeps stock views current, mutations are batched through a single command path, and every change writes an audit record with actor and previous value.",
-  Web3:
-    "The platform was decomposed into independently deployable services behind an API gateway, with asynchronous messaging for long-running work and containerised delivery per service.",
+  Web3: "The platform was decomposed into independently deployable services behind an API gateway, with asynchronous messaging for long-running work and containerised delivery per service.",
   Sports:
     "Scheduling, rosters and results were unified behind one model with role-scoped views, so a coach's edit is immediately what every athlete sees.",
   "Tech Accessories":
@@ -349,14 +355,19 @@ const techNotes: Record<string, string> = {
     "ASP.NET MVC rendering server-side views with controllers kept thin and business rules pushed into services.",
   "C#": "C# domain and service layer holding the business rules, validation and mapping logic.",
   MySQL: "MySQL as the relational store, with indexed lookups on the hot query paths.",
-  PostgreSQL: "PostgreSQL as the relational store, using constraints and indexes to keep data integrity at the database level.",
-  MongoDB: "MongoDB for document-shaped data, letting product and catalog records evolve without rigid migrations.",
-  "SQL Server": "SQL Server as the relational backbone, with parameterised access and tuned indexes.",
+  PostgreSQL:
+    "PostgreSQL as the relational store, using constraints and indexes to keep data integrity at the database level.",
+  MongoDB:
+    "MongoDB for document-shaped data, letting product and catalog records evolve without rigid migrations.",
+  "SQL Server":
+    "SQL Server as the relational backbone, with parameterised access and tuned indexes.",
   Web3: "Web3 wallet connection and contract interaction isolated behind a dedicated module with graceful fallback.",
   Microservices:
     "Microservice topology: independently deployable services, own data per service, gateway-fronted and message-driven.",
-  Swagger: "Swagger/OpenAPI generated from the code so documentation cannot drift from the implementation.",
-  "RESTful API": "REST conventions for resources, verbs and status codes, with predictable pagination and error shapes.",
+  Swagger:
+    "Swagger/OpenAPI generated from the code so documentation cannot drift from the implementation.",
+  "RESTful API":
+    "REST conventions for resources, verbs and status codes, with predictable pagination and error shapes.",
 };
 
 const typeRole: Record<Project["type"], string> = {
@@ -410,11 +421,21 @@ function defaultResponsibilities(project: Project): string[] {
     `Implemented the full ${project.tech.join(" + ")} stack for this project.`,
     "Translated design intent into a responsive, accessible interface across breakpoints.",
   ];
-  if (project.database) base.push(`Modelled and tuned the ${project.database} schema behind the feature set.`);
-  if (project.type === "Team") base.push("Collaborated on shared conventions, code review and integration with parallel workstreams.");
-  if (project.type === "Freelance") base.push("Handled client communication, scope decisions, delivery and handover directly.");
-  if (project.github) base.push("Maintained the public repository, documentation and commit history.");
-  base.push(project.live !== "#" ? "Deployed and verified the production build." : "Packaged the project for local and staged deployment.");
+  if (project.database)
+    base.push(`Modelled and tuned the ${project.database} schema behind the feature set.`);
+  if (project.type === "Team")
+    base.push(
+      "Collaborated on shared conventions, code review and integration with parallel workstreams.",
+    );
+  if (project.type === "Freelance")
+    base.push("Handled client communication, scope decisions, delivery and handover directly.");
+  if (project.github)
+    base.push("Maintained the public repository, documentation and commit history.");
+  base.push(
+    project.live !== "#"
+      ? "Deployed and verified the production build."
+      : "Packaged the project for local and staged deployment.",
+  );
   return base;
 }
 
@@ -440,13 +461,13 @@ function defaultOutcomes(project: Project): string[] {
   out.push(
     project.live !== "#"
       ? "Shipped to production and publicly reachable at the live URL."
-      : "Delivered as a complete, runnable codebase ready for deployment."
+      : "Delivered as a complete, runnable codebase ready for deployment.",
   );
   out.push("Responsive from small mobile screens through large desktop layouts.");
   out.push(
     project.category === "Backend"
       ? "Documented endpoints that other teams could integrate against without direct support."
-      : "Interface patterns reusable across the rest of the product surface."
+      : "Interface patterns reusable across the rest of the product surface.",
   );
   if (project.status) out.push(`Current project status: ${project.status}.`);
   return out;
@@ -680,7 +701,7 @@ export function getRelatedProjects(project: Project, all: Project[], limit = 3):
     (p) =>
       p.id !== project.id &&
       p.category !== project.category &&
-      p.tech.some((t) => project.tech.includes(t))
+      p.tech.some((t) => project.tech.includes(t)),
   );
   return [...sameCategory, ...sharesTech].slice(0, limit);
 }

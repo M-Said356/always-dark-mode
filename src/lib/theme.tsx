@@ -124,9 +124,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
    */
   const toggleTheme = (origin?: { x: number; y: number }) => {
     const next: Theme = theme === "dark" ? "light" : "dark";
-    const doc = typeof document !== "undefined" ? (document as Document & {
-      startViewTransition?: (cb: () => void) => { ready: Promise<void>; finished: Promise<void> };
-    }) : null;
+    const doc =
+      typeof document !== "undefined"
+        ? (document as Document & {
+            startViewTransition?: (cb: () => void) => {
+              ready: Promise<void>;
+              finished: Promise<void>;
+            };
+          })
+        : null;
 
     const reduced =
       typeof window !== "undefined" &&
@@ -151,25 +157,24 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           Math.max(x, window.innerWidth - x),
           Math.max(y, window.innerHeight - y),
         );
+        // Duration scales a little with how far the circle has to travel, so
+        // small viewports don't feel sluggish and large ones don't feel abrupt.
+        const duration = Math.round(Math.min(420, Math.max(260, radius * 0.28)));
         root.animate(
           {
-            clipPath: [
-              `circle(0px at ${x}px ${y}px)`,
-              `circle(${radius}px at ${x}px ${y}px)`,
-            ],
+            clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`],
           },
           {
-            duration: 480,
-            easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+            duration,
+            easing: "cubic-bezier(0.32, 0.72, 0, 1)",
+            fill: "forwards",
             pseudoElement: "::view-transition-new(root)",
           },
         );
       })
-      .catch(() => {});
+      .catch(() => root.classList.remove("theme-transitioning"));
 
-    transition.finished
-      .catch(() => {})
-      .finally(() => root.classList.remove("theme-transitioning"));
+    transition.finished.catch(() => {}).finally(() => root.classList.remove("theme-transitioning"));
   };
 
   return (
